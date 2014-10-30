@@ -1,2 +1,2 @@
 .env/
-superEnalotto/__pycache__/
+*.pyc

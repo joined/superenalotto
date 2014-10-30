@@ -4,31 +4,30 @@
   <title>Verifica vincita Superenalotto</title>
   <meta name="viewport" content="width=device-width, user-scalable=no">
   <style>
-    div.main {
+    body {
       font-family: sans-serif;
       max-width: 350px;
-      margin: 0 auto;
+      margin: 10px auto;
       border: 1px solid #BBB;
       border-radius: 4px;
-      box-sizing: border-box;
       padding: 5px;
+      box-sizing: border-box;
     }
     li.estrazione {
       width: 100%;
       padding: 10px;
-      box-sizing: border-box;
       border-top: 1px solid #BBB;
+      box-sizing: border-box;
     }
-    li > ul { list-style-type: disc; }
-    div.main > ul {
+    body > ul {
       list-style-type: none;
       padding-left: 0;
     }
+    li > ul { list-style-type: disc; }
     h2 { text-align: center; }
   </style>
 </head>
 <body>
-<div class="main">
   <h2>Verifica vincita Superenalotto</h2>
   <ul>
     {% for estrazione in estrazioni %}
@@ -49,6 +48,5 @@
       </li>
     {% endfor %}
   </ul>
-</div>
 </body>
 </html>

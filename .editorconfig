@@ -8,7 +8,11 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 
-# 4 space indentation
+# 4 space indentation for python files
 [*.py]
 indent_style = space
 indent_size = 4
+
+# tab  indentation for html
+[*.html]
+indent_style = tab

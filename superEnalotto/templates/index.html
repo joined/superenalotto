@@ -1,67 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Estrazioni superenalotto</title>
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<meta charset="UTF-8">
+	<title>Estrazioni superenalotto</title>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 </head>
 <style>
-  html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  ul {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  section {
-    width: 100%;
-    background-color: #34495e;
-    overflow: hidden;
-  }
-  section:nth-child(odd) {
-    background-color: #2c3e50;
-  }
-  div {
-    text-align: center;
-    color: white;
-    font-family: 'Open Sans', sans-serif;
-  }
-
-  span.nonpreso {
-    color: rgba(255,255,255,0.1);
-  }
-
-  @media (min-width: 340px) {
-    div { font-size: 16pt; }
-  }
+	html, body {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+		font-size: 16pt;
+		color: white;
+		font-family: 'Open Sans', sans-serif;
+	}
+	section {
+		width: 100%;
+		background-color: #34495e;
+		overflow: hidden;
+		text-align: center;
+	}
+	section:nth-child(odd) { background-color: #2c3e50; }
+	ul {
+		list-style-type: none;
+		padding-left: 0;
+	}
+	li > ul > li {
+		display: inline-block;
+		width: 40px;
+		text-align:right;
+	}
+	li > ul > li:not(.preso) { opacity: 0.1; }
 </style>
 <body>
-{% for estrazione in estrazioni %}
-  <section>
-    <div>
-      <h3>Estrazione del {{estrazione.data}}</h3>
-      <p>
-        <ul>
-        {% for combinazione in estrazione.combinazioni %}
-          <li>
-          {% for numero in combinazione %}
-            {% if not numero.preso %}
-              <span class="nonpreso">
-            {% else %}
-              <span>
-            {% endif %}
-              {{numero.numero}}
-            </span>
-          {% endfor %}
-          </li>
-        {% endfor %}
-        </ul>
-      </p>
-    </div>
-  </section>
-{% endfor %}
+{%- for estrazione in estrazioni %}
+	<section>
+		<h3>Estrazione del {{estrazione.data}}</h3>
+		<p>
+			<ul>
+			{%- for combinazione in estrazione.combinazioni %}
+				<li>
+					<ul>
+						{% for numero in combinazione -%}
+							<li {%- if numero.preso %} class='preso' {%- endif %}>
+								{{- numero.numero -}}
+							</li>
+						{%- endfor %}
+					</ul>
+				</li>
+			{% endfor -%}
+			</ul>
+		</p>
+	</section>
+{%- endfor -%}
 </body>
 </html>

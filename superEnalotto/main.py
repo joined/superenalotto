@@ -5,67 +5,55 @@ import lxml.html
 
 superEnalotto = Flask(__name__)
 
-giocate = [[7,  16, 22, 56, 67, 88],
-           [9,  14, 36, 56, 67, 87],
-           [8,  31, 35, 45, 66, 87],
-           [10, 21, 30, 57, 63, 74],
-           [13, 40, 56, 74, 81, 90],
-           [16, 23, 40, 55, 60, 82],
-           [16, 41, 43, 52, 61, 80],
-           [3,  27, 33, 36, 57, 84]]
+plays = [[7,  16, 22, 56, 67, 88],
+         [9,  14, 36, 56, 67, 87],
+         [8,  31, 35, 45, 66, 87],
+         [10, 21, 30, 57, 63, 74],
+         [13, 40, 56, 74, 81, 90],
+         [16, 23, 40, 55, 60, 82],
+         [16, 41, 43, 52, 61, 80],
+         [3,  27, 33, 36, 57, 84]]
 
 
 def get_estrazioni():
-    """
-    Questa funzione fa schifo.
-    Non fate mai niente di simile, vi prego.
-    """
-
     r = requests.get("http://www.superenalotto.com/archivio-estrazioni.asp")
 
     lxml_root = lxml.html.fromstring(r.text)
 
-    # Cerco tutte le righe della tabella con le estrazioni,
-    # identificata dalla classe "t1"
-    righe = lxml_root.xpath("//table[@class='t1']/tbody/tr")
+    # Get all rows of the table with extractions, identified
+    # by class "t1"
+    rows = lxml_root.xpath("//table[@class='t1']/tbody/tr")
 
-    estrazioni = []
+    extractions = []
 
-    for riga in righe:
-        # Prendo la data dall'elemento "th" della riga
-        data = riga.xpath("th")[0].text_content().strip()
+    for row in rows:
+        # Get extraction date from "th" element
+        date = row.xpath("th")[0].text_content().strip()
 
-        # Prendo i numeri dell'estrazione come celle della
-        # sotto-tabella
-        numeri_estrazione = [int(td.text_content().strip())
-                             for td
-                             in riga.xpath("td/table/tbody/tr/td")]
+        # Get numbers of the extraction
+        extraction_numbers = [int(td.text_content().strip())
+                              for td
+                              in row.xpath("td//td[position() <= 6]")]
 
-        combinazioni = []
+        combinations = []
 
-        for giocata in giocate:
-            combinazione = []
+        for play in plays:
+            combination = []
 
-            for numero in giocata:
-                preso = True if numero in numeri_estrazione[:6] else False
+            for number in play:
+                match = True if number in extraction_numbers else False
 
-                combinazione.append({'numero': numero, 'preso': preso})
+                combination.append({'value': number, 'match': match})
 
-            combinazioni.append(combinazione)
+            combinations.append(combination)
 
-        estrazioni.append({'data': data, 'combinazioni': combinazioni})
+        extractions.append({'date': date, 'combinations': combinations})
 
-    return estrazioni
+    return extractions
 
 
 @superEnalotto.route('/')
 def index():
-    """
-    La principale ed unica route. Prende le estrazioni dal sito ufficiale,
-    poi fa la verifica delle giocate vincenti e risponde con il template
-    compilato con le estrazioni
-    """
+    extractions = get_estrazioni()
 
-    estrazioni = get_estrazioni()
-
-    return render_template('index.html', estrazioni=estrazioni)
+    return render_template('index.html', extractions=extractions)
